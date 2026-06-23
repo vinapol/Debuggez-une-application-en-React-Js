@@ -19,13 +19,14 @@ const EventList = () => {
     setType(evtType === "" ? null : evtType);
   };
 
-  const eventsByType = !type
-    ? data?.events
-    : data?.events.filter((event) => {
+  const eventsByType = (!type
+    ? [...(data?.events || [])]
+    : (data?.events || []).filter((event) => {
       const eventTypeClean = event.type.toString().toLowerCase().trim();
       const selectedTypeClean = type.toString().toLowerCase().trim();
       return eventTypeClean === selectedTypeClean;
-    });
+    })
+  ).sort((a, b) => new Date(b.date) - new Date(a.date));
   const pageNumber = Math.ceil((eventsByType?.length || 0) / PER_PAGE);
   const filteredEvents = (eventsByType || []).slice(
     (currentPage - 1) * PER_PAGE,
@@ -72,16 +73,16 @@ const EventList = () => {
                     event.preventDefault();
                     setCurrentPage(pageIndex);
                   }}
-                  className = { currentPage === pageIndex ? "active" : ""}
+                  className={currentPage === pageIndex ? "active" : ""}
                 >
-            {pageIndex}
-          </a>
-          );
+                  {pageIndex}
+                </a>
+              );
             })}
-        </div>
-    </>
-  )
-}
+          </div>
+        </>
+      )
+      }
     </>
   );
 
